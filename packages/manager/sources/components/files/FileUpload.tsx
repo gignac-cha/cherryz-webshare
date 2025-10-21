@@ -6,6 +6,9 @@ import { faUpload, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import * as Progress from '@radix-ui/react-progress';
 import type { Theme } from '@/types';
 
+// 최대 파일 크기: 1GB
+const MAX_FILE_SIZE = 1024 * 1024 * 1024;
+
 interface FileUploadProps {
   theme: Theme;
   currentPath: string;
@@ -14,21 +17,43 @@ interface FileUploadProps {
   onError: (error: string) => void;
 }
 
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+};
+
 export function FileUpload({ theme, currentPath, onUpload, onSuccess, onError }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileSizeError, setFileSizeError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // 파일 크기 검증
+      if (file.size > MAX_FILE_SIZE) {
+        setFileSizeError(`파일 크기가 너무 큽니다. 최대 ${formatFileSize(MAX_FILE_SIZE)}까지 업로드 가능합니다.`);
+        setSelectedFile(null);
+        return;
+      }
+      setFileSizeError(null);
       setSelectedFile(file);
     }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) return;
+
+    // 업로드 전 재검증
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      onError(`파일 크기가 너무 큽니다. 최대 ${formatFileSize(MAX_FILE_SIZE)}까지 업로드 가능합니다.`);
+      return;
+    }
 
     setIsUploading(true);
     setProgress(0);
@@ -52,6 +77,7 @@ export function FileUpload({ theme, currentPath, onUpload, onSuccess, onError }:
 
       setTimeout(() => {
         setSelectedFile(null);
+        setFileSizeError(null);
         setProgress(0);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
@@ -80,48 +106,55 @@ export function FileUpload({ theme, currentPath, onUpload, onSuccess, onError }:
       <div
         css={css`
           display: flex;
-          gap: ${theme.spacing.md};
-          align-items: flex-start;
+          flex-direction: column;
+          gap: ${theme.spacing.sm};
         `}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          onChange={handleFileChange}
-          disabled={isUploading}
+        <div
           css={css`
-            flex: 1;
-            padding: ${theme.spacing.sm};
-            border: 1px solid ${theme.colors.border};
-            border-radius: ${theme.borderRadius.md};
-            background: ${theme.colors.background};
-            color: ${theme.colors.text};
-            cursor: pointer;
-
-            &:disabled {
-              opacity: 0.5;
-              cursor: not-allowed;
-            }
-
-            &::file-selector-button {
-              background: ${theme.colors.primary};
-              color: white;
-              border: none;
-              padding: ${theme.spacing.sm} ${theme.spacing.md};
-              border-radius: ${theme.borderRadius.sm};
-              cursor: pointer;
-              margin-right: ${theme.spacing.md};
-
-              &:hover {
-                background: ${theme.colors.primaryHover};
-              }
-            }
+            display: flex;
+            gap: ${theme.spacing.md};
+            align-items: flex-start;
           `}
-        />
-        <button
-          onClick={handleUpload}
-          disabled={!selectedFile || isUploading}
-          css={css`
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleFileChange}
+            disabled={isUploading}
+            css={css`
+              flex: 1;
+              padding: ${theme.spacing.sm};
+              border: 1px solid ${fileSizeError ? theme.colors.danger : theme.colors.border};
+              border-radius: ${theme.borderRadius.md};
+              background: ${theme.colors.background};
+              color: ${theme.colors.text};
+              cursor: pointer;
+
+              &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+              }
+
+              &::file-selector-button {
+                background: ${theme.colors.primary};
+                color: white;
+                border: none;
+                padding: ${theme.spacing.sm} ${theme.spacing.md};
+                border-radius: ${theme.borderRadius.sm};
+                cursor: pointer;
+                margin-right: ${theme.spacing.md};
+
+                &:hover {
+                  background: ${theme.colors.primaryHover};
+                }
+              }
+            `}
+          />
+          <button
+            onClick={handleUpload}
+            disabled={!selectedFile || isUploading || !!fileSizeError}
+            css={css`
             padding: ${theme.spacing.sm} ${theme.spacing.lg};
             background: ${theme.colors.primary};
             color: white;
@@ -157,6 +190,37 @@ export function FileUpload({ theme, currentPath, onUpload, onSuccess, onError }:
             </>
           )}
         </button>
+        </div>
+
+        {fileSizeError && (
+          <div
+            css={css`
+              padding: ${theme.spacing.sm} ${theme.spacing.md};
+              background: rgba(239, 68, 68, 0.1);
+              border: 1px solid ${theme.colors.danger};
+              border-radius: ${theme.borderRadius.sm};
+              color: ${theme.colors.danger};
+              font-size: 0.875rem;
+            `}
+          >
+            {fileSizeError}
+          </div>
+        )}
+
+        {selectedFile && !fileSizeError && !isUploading && (
+          <div
+            css={css`
+              padding: ${theme.spacing.sm} ${theme.spacing.md};
+              background: ${theme.colors.background};
+              border: 1px solid ${theme.colors.border};
+              border-radius: ${theme.borderRadius.sm};
+              font-size: 0.875rem;
+              color: ${theme.colors.textSecondary};
+            `}
+          >
+            선택된 파일: {selectedFile.name} ({formatFileSize(selectedFile.size)})
+          </div>
+        )}
       </div>
 
       {isUploading && (

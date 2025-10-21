@@ -14,5 +14,5 @@ export const settings = {
   adminUsername: process.env.ADMIN_USERNAME || 'admin',
   adminPassword: process.env.ADMIN_PASSWORD || 'admin123',
   uploadDir: path.resolve(process.env.UPLOAD_DIR || './uploads'),
-  maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '104857600', 10), // 100MB
+  maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '1073741824', 10), // 1GB (1024 * 1024 * 1024)
 };

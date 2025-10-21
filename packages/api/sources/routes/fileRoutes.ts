@@ -1,4 +1,4 @@
-import { Router, type Router as RouterType } from 'express';
+import { Router, type Router as RouterType, type Request, type Response, type NextFunction } from 'express';
 import multer from 'multer';
 import { fileController } from '../controllers/fileController.js';
 import { authenticate, requireAdmin } from '../middlewares/authentication.js';
@@ -13,6 +13,28 @@ const upload = multer({
     fileSize: settings.maxFileSize,
   },
 });
+
+/**
+ * Multer 에러 처리 미들웨어
+ */
+const handleMulterError = (err: any, req: Request, res: Response, next: NextFunction): void => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      const maxSizeMB = Math.round(settings.maxFileSize / (1024 * 1024));
+      res.status(413).json({
+        success: false,
+        error: `파일 크기가 너무 큽니다. 최대 ${maxSizeMB}MB까지 업로드 가능합니다.`,
+      });
+      return;
+    }
+    res.status(400).json({
+      success: false,
+      error: `파일 업로드 오류: ${err.message}`,
+    });
+    return;
+  }
+  next(err);
+};
 
 /**
  * GET /api/files
@@ -30,7 +52,7 @@ router.get('/download', authenticate, fileController.downloadFile);
  * POST /api/files/upload
  * 파일 업로드 (관리자 전용)
  */
-router.post('/upload', authenticate, requireAdmin, upload.single('file'), fileController.uploadFile);
+router.post('/upload', authenticate, requireAdmin, upload.single('file'), handleMulterError, fileController.uploadFile);
 
 /**
  * POST /api/files/directory

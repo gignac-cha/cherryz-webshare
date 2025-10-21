@@ -1,17 +1,17 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { config } from '../config';
-import { User } from '../types';
+import { settings } from '../settings/index.js';
+import { User } from '../types/index.js';
 
 // In-memory user storage (나중에 데이터베이스로 교체 가능)
 const users: User[] = [];
 
 // 초기 관리자 계정 생성
 const initializeAdmin = async () => {
-  const hashedPassword = await bcrypt.hash(config.adminPassword, 10);
+  const hashedPassword = await bcrypt.hash(settings.adminPassword, 10);
   users.push({
     id: '1',
-    username: config.adminUsername,
+    username: settings.adminUsername,
     password: hashedPassword,
     role: 'admin',
   });
@@ -39,7 +39,7 @@ export const authService = {
         username: user.username,
         role: user.role,
       },
-      config.jwtSecret,
+      settings.jwtSecret,
       { expiresIn: '24h' }
     );
 

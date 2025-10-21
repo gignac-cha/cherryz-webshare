@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { fileService } from '../services/fileService';
-import { ApiResponse } from '../types';
+import { fileService } from '../services/fileService.js';
+import { ApiResponse } from '../types/index.js';
 
 export const fileController = {
   /**

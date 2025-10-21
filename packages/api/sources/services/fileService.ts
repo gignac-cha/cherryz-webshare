@@ -1,17 +1,17 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { config } from '../config';
-import { FileInfo } from '../types';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { settings } from '../settings/index.js';
+import { FileInfo } from '../types/index.js';
 
 export const fileService = {
   /**
    * 파일/디렉토리 목록 조회
    */
   async listFiles(relativePath: string = ''): Promise<FileInfo[]> {
-    const fullPath = path.join(config.uploadDir, relativePath);
+    const fullPath = path.join(settings.uploadDir, relativePath);
 
     // 보안: 경로 탐색 공격 방지
-    if (!fullPath.startsWith(config.uploadDir)) {
+    if (!fullPath.startsWith(settings.uploadDir)) {
       throw new Error('Invalid path');
     }
 
@@ -52,10 +52,10 @@ export const fileService = {
    * 파일 업로드 (관리자 전용)
    */
   async uploadFile(file: Express.Multer.File, relativePath: string = ''): Promise<FileInfo> {
-    const targetDir = path.join(config.uploadDir, relativePath);
+    const targetDir = path.join(settings.uploadDir, relativePath);
 
     // 보안: 경로 탐색 공격 방지
-    if (!targetDir.startsWith(config.uploadDir)) {
+    if (!targetDir.startsWith(settings.uploadDir)) {
       throw new Error('Invalid path');
     }
 
@@ -82,11 +82,11 @@ export const fileService = {
    * 파일/디렉토리 이동 (관리자 전용)
    */
   async moveFile(sourcePath: string, destPath: string): Promise<void> {
-    const fullSourcePath = path.join(config.uploadDir, sourcePath);
-    const fullDestPath = path.join(config.uploadDir, destPath);
+    const fullSourcePath = path.join(settings.uploadDir, sourcePath);
+    const fullDestPath = path.join(settings.uploadDir, destPath);
 
     // 보안: 경로 탐색 공격 방지
-    if (!fullSourcePath.startsWith(config.uploadDir) || !fullDestPath.startsWith(config.uploadDir)) {
+    if (!fullSourcePath.startsWith(settings.uploadDir) || !fullDestPath.startsWith(settings.uploadDir)) {
       throw new Error('Invalid path');
     }
 
@@ -105,10 +105,10 @@ export const fileService = {
    * 파일/디렉토리 삭제 (관리자 전용)
    */
   async deleteFile(relativePath: string): Promise<void> {
-    const fullPath = path.join(config.uploadDir, relativePath);
+    const fullPath = path.join(settings.uploadDir, relativePath);
 
     // 보안: 경로 탐색 공격 방지
-    if (!fullPath.startsWith(config.uploadDir)) {
+    if (!fullPath.startsWith(settings.uploadDir)) {
       throw new Error('Invalid path');
     }
 
@@ -128,10 +128,10 @@ export const fileService = {
    * 디렉토리 생성 (관리자 전용)
    */
   async createDirectory(relativePath: string): Promise<FileInfo> {
-    const fullPath = path.join(config.uploadDir, relativePath);
+    const fullPath = path.join(settings.uploadDir, relativePath);
 
     // 보안: 경로 탐색 공격 방지
-    if (!fullPath.startsWith(config.uploadDir)) {
+    if (!fullPath.startsWith(settings.uploadDir)) {
       throw new Error('Invalid path');
     }
 
@@ -152,10 +152,10 @@ export const fileService = {
    * 파일 다운로드를 위한 전체 경로 반환
    */
   getFullPath(relativePath: string): string {
-    const fullPath = path.join(config.uploadDir, relativePath);
+    const fullPath = path.join(settings.uploadDir, relativePath);
 
     // 보안: 경로 탐색 공격 방지
-    if (!fullPath.startsWith(config.uploadDir)) {
+    if (!fullPath.startsWith(settings.uploadDir)) {
       throw new Error('Invalid path');
     }
 

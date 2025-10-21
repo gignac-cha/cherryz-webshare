@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { config } from '../config';
-import { AuthRequest } from '../types';
+import { settings } from '../settings/index.js';
+import { AuthRequest } from '../types/index.js';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,7 +15,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     }
 
     const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, config.jwtSecret) as {
+    const decoded = jwt.verify(token, settings.jwtSecret) as {
       id: string;
       username: string;
       role: 'admin' | 'user';

@@ -27,25 +27,32 @@ Cherryz WebShare는 간편한 파일 공유와 관리를 위한 웹 서버입니
 
 ## 기술 스택
 
-- **Runtime**: Node.js
+- **Runtime**: Node.js 22+
+- **Package Manager**: pnpm 9+
+- **Architecture**: Monorepo
 - **Framework**: Express.js
-- **Language**: TypeScript
+- **Language**: TypeScript (ES Modules)
 - **Authentication**: JWT (jsonwebtoken)
 - **File Upload**: Multer
 - **Security**: Helmet, bcryptjs
+- **Dev Tools**: tsx, npm-check-updates
 
 ## 설치 및 실행
 
+### 전제 조건
+- Node.js >= 22.0.0
+- pnpm >= 9.0.0
+
 ### 1. 의존성 설치
 ```bash
-npm install
+pnpm install
 ```
 
 ### 2. 환경 변수 설정
-`.env.example` 파일을 복사하여 `.env` 파일을 생성하고 필요한 값을 설정합니다:
+`packages/api/.env.example` 파일을 복사하여 `.env` 파일을 생성하고 필요한 값을 설정합니다:
 
 ```bash
-cp .env.example .env
+cp packages/api/.env.example packages/api/.env
 ```
 
 `.env` 파일 예시:
@@ -61,13 +68,18 @@ MAX_FILE_SIZE=104857600
 
 ### 3. 개발 모드로 실행
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ### 4. 프로덕션 빌드 및 실행
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
+```
+
+### 5. 의존성 최신화
+```bash
+pnpm update-deps
 ```
 
 서버가 실행되면 기본적으로 `http://localhost:3000`에서 접근할 수 있습니다.
@@ -98,26 +110,31 @@ npm start
 
 ⚠️ **프로덕션 환경에서는 반드시 비밀번호를 변경하세요!**
 
-## 프로젝트 구조
+## 프로젝트 구조 (Monorepo)
 
 ```
 cherryz-webshare/
-├── src/
-│   ├── config/          # 설정 파일
-│   ├── controllers/     # API 컨트롤러
-│   ├── middlewares/     # 미들웨어 (인증, 권한)
-│   ├── models/          # 데이터 모델
-│   ├── routes/          # API 라우트
-│   ├── services/        # 비즈니스 로직
-│   ├── types/           # TypeScript 타입 정의
-│   ├── app.ts           # Express 앱 설정
-│   └── server.ts        # 서버 진입점
-├── uploads/             # 업로드된 파일 저장 디렉토리
-├── .env                 # 환경 변수 (git에서 제외)
-├── .env.example         # 환경 변수 예시
-├── package.json
-├── tsconfig.json
-├── API.md               # API 문서
+├── packages/
+│   └── api/                    # API 서버 패키지
+│       ├── sources/            # 소스 코드 (src → sources)
+│       │   ├── settings/       # 설정 파일 (config → settings)
+│       │   ├── controllers/    # API 컨트롤러
+│       │   ├── middlewares/    # 미들웨어 (인증, 권한)
+│       │   ├── models/         # 데이터 모델
+│       │   ├── routes/         # API 라우트
+│       │   ├── services/       # 비즈니스 로직
+│       │   ├── types/          # TypeScript 타입 정의
+│       │   ├── application.ts  # Express 앱 설정 (app → application)
+│       │   └── server.ts       # 서버 진입점
+│       ├── uploads/            # 업로드된 파일 저장 디렉토리
+│       ├── .env                # 환경 변수 (git에서 제외)
+│       ├── .env.example        # 환경 변수 예시
+│       ├── package.json
+│       └── tsconfig.json
+├── pnpm-workspace.yaml         # pnpm workspace 설정
+├── .ncurc.json                 # npm-check-updates 설정
+├── package.json                # 루트 package.json
+├── API.md                      # API 문서
 └── README.md
 ```
 

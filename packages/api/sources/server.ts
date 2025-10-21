@@ -1,11 +1,11 @@
-import app from './app';
-import { config } from './config';
-import fs from 'fs';
+import app from './application.js';
+import { settings } from './settings/index.js';
+import fs from 'node:fs';
 
 // uploads 디렉토리 생성
-if (!fs.existsSync(config.uploadDir)) {
-  fs.mkdirSync(config.uploadDir, { recursive: true });
-  console.log(`Created upload directory: ${config.uploadDir}`);
+if (!fs.existsSync(settings.uploadDir)) {
+  fs.mkdirSync(settings.uploadDir, { recursive: true });
+  console.log(`Created upload directory: ${settings.uploadDir}`);
 }
 
 // /tmp/uploads 디렉토리 생성 (multer 임시 저장소)
@@ -13,14 +13,14 @@ if (!fs.existsSync('/tmp/uploads')) {
   fs.mkdirSync('/tmp/uploads', { recursive: true });
 }
 
-app.listen(config.port, () => {
+app.listen(settings.port, () => {
   console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║   🍒 Cherryz WebShare Server                          ║
 ║                                                       ║
-║   Server is running on port ${config.port}                   ║
-║   Environment: ${config.nodeEnv}                       ║
+║   Server is running on port ${settings.port}                   ║
+║   Environment: ${settings.nodeEnv}                       ║
 ║                                                       ║
 ║   API Endpoints:                                      ║
 ║   - POST   /api/auth/login                            ║
@@ -33,8 +33,8 @@ app.listen(config.port, () => {
 ║   - DELETE /api/files             (Admin only)        ║
 ║                                                       ║
 ║   Default Admin Credentials:                          ║
-║   Username: ${config.adminUsername}                           ║
-║   Password: ${config.adminPassword}                       ║
+║   Username: ${settings.adminUsername}                           ║
+║   Password: ${settings.adminPassword}                       ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
   `);

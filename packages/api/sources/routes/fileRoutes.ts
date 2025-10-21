@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { fileController } from '../controllers/fileController';
-import { authenticate, requireAdmin } from '../middlewares/auth';
-import { config } from '../config';
+import { fileController } from '../controllers/fileController.js';
+import { authenticate, requireAdmin } from '../middlewares/auth.js';
+import { settings } from '../settings/index.js';
 
 const router = Router();
 
@@ -10,7 +10,7 @@ const router = Router();
 const upload = multer({
   dest: '/tmp/uploads/',
   limits: {
-    fileSize: config.maxFileSize,
+    fileSize: settings.maxFileSize,
   },
 });
 

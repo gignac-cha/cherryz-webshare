@@ -1,41 +1,28 @@
 {
   "name": "cherryz-webshare",
   "version": "0.1.0",
+  "private": true,
   "description": "Cherryz WebShare - A modern file sharing server inspired by Berryz WebShare",
-  "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "test": "jest"
+    "dev": "pnpm --filter @cherryz/api dev",
+    "build": "pnpm --filter @cherryz/api build",
+    "start": "pnpm --filter @cherryz/api start",
+    "update-deps": "ncu -u && pnpm install"
   },
   "keywords": [
     "file-sharing",
     "webshare",
-    "file-management"
+    "file-management",
+    "monorepo"
   ],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "multer": "^1.4.5-lts.1",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "express-validator": "^7.0.1",
-    "helmet": "^7.1.0",
-    "morgan": "^1.10.0"
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/cors": "^2.8.17",
-    "@types/multer": "^1.4.11",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^20.10.6",
-    "typescript": "^5.3.3",
-    "ts-node-dev": "^2.0.0"
+    "npm-check-updates": "^17.1.14"
   }
 }

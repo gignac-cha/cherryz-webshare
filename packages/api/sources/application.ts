@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import authRoutes from './routes/authRoutes';
-import fileRoutes from './routes/fileRoutes';
+import authRoutes from './routes/authRoutes.js';
+import fileRoutes from './routes/fileRoutes.js';
 
 const app = express();
 

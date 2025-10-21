@@ -5,7 +5,13 @@
   "description": "Cherryz WebShare - A modern file sharing server inspired by Berryz WebShare",
   "scripts": {
     "dev": "pnpm --filter @cherryz/api dev",
+    "dev:manager": "pnpm --filter @cherryz/manager dev",
+    "dev:viewer": "pnpm --filter @cherryz/viewer dev",
+    "dev:all": "pnpm --parallel --filter @cherryz/* dev",
     "build": "pnpm --filter @cherryz/api build",
+    "build:manager": "pnpm --filter @cherryz/manager build",
+    "build:viewer": "pnpm --filter @cherryz/viewer build",
+    "build:all": "pnpm --filter @cherryz/* build",
     "start": "pnpm --filter @cherryz/api start",
     "update-deps": "ncu -u && pnpm install"
   },

@@ -37,18 +37,19 @@ Cherryz WebShare는 간편한 파일 공유와 관리를 위한 웹 서버입니
 - **Dev Tools**: tsx
 
 ### Frontend (Manager & Viewer)
-- **Build Tool**: Vite
-- **Framework**: React 18
+- **Build Tool**: Vite 7
+- **Framework**: React 19
 - **Language**: TypeScript
 - **Routing**: React Router v7
-- **State Management**: TanStack React Query
+- **State Management**: TanStack React Query v5
 - **Styling**: Emotion (CSS-in-JS)
 - **UI Components**: Radix UI
-- **Icons**: FontAwesome
+- **Icons**: FontAwesome 7
 - **Date/Time**: dayjs
 
 ### Infrastructure
-- **Package Manager**: pnpm 9+
+- **Package Manager**: pnpm 10+
+- **Build System**: Turborepo v2
 - **Architecture**: Monorepo (pnpm workspaces)
 - **Dependency Updates**: npm-check-updates
 
@@ -56,7 +57,7 @@ Cherryz WebShare는 간편한 파일 공유와 관리를 위한 웹 서버입니
 
 ### 전제 조건
 - Node.js >= 22.0.0
-- pnpm >= 9.0.0
+- pnpm >= 10.0.0
 
 ### 1. 의존성 설치
 ```bash
@@ -112,6 +113,8 @@ pnpm dev:all
 
 ### 4. 프로덕션 빌드
 
+Turborepo를 사용하여 효율적으로 빌드합니다. Turborepo는 캐싱과 병렬 빌드를 통해 빌드 시간을 단축합니다.
+
 #### 모든 패키지 빌드
 ```bash
 pnpm build:all
@@ -122,6 +125,16 @@ pnpm build:all
 pnpm build              # API만
 pnpm build:manager      # Manager만
 pnpm build:viewer       # Viewer만
+```
+
+#### 타입 체크
+```bash
+pnpm type-check         # 모든 패키지의 타입 체크
+```
+
+#### 빌드 캐시 및 산출물 정리
+```bash
+pnpm clean              # 모든 dist, .turbo 디렉토리 삭제
 ```
 
 ### 5. 프로덕션 실행
@@ -211,6 +224,7 @@ cherryz-webshare/
 │       └── tsconfig.json
 │
 ├── pnpm-workspace.yaml         # pnpm workspace 설정
+├── turbo.json                  # Turborepo 빌드 설정
 ├── .ncurc.json                 # npm-check-updates 설정
 ├── package.json                # 루트 package.json
 ├── API.md                      # API 문서
@@ -236,6 +250,35 @@ cherryz-webshare/
 - 파일 조회 및 다운로드만 가능 (읽기 전용)
 - 검색 및 정렬 기능
 - 포트: 5174 (개발 시)
+
+## Turborepo 빌드 시스템
+
+이 프로젝트는 Turborepo를 사용하여 모노레포 빌드를 관리합니다.
+
+### Turborepo의 장점
+
+1. **빌드 캐싱**: 변경되지 않은 패키지는 캐시된 결과를 재사용
+2. **병렬 빌드**: 여러 패키지를 동시에 빌드하여 시간 단축
+3. **의존성 추적**: 패키지 간 의존성을 자동으로 파악하여 올바른 순서로 빌드
+4. **원격 캐싱**: 팀 전체가 빌드 캐시를 공유 가능 (선택 사항)
+
+### Turborepo 태스크
+
+`turbo.json`에 정의된 주요 태스크:
+
+- **build**: TypeScript 컴파일 및 Vite 빌드
+- **dev**: 개발 서버 실행 (캐싱 비활성화)
+- **type-check**: TypeScript 타입 체크
+- **clean**: 빌드 산출물 및 캐시 정리
+
+### 캐시 정리
+
+빌드 문제가 발생하면 캐시를 정리해보세요:
+
+```bash
+pnpm clean          # 각 패키지의 dist, .turbo 정리
+rm -rf .turbo       # 루트 Turborepo 캐시 정리
+```
 
 ## 보안 고려사항
 

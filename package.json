@@ -4,14 +4,16 @@
   "private": true,
   "description": "Cherryz WebShare - A modern file sharing server inspired by Berryz WebShare",
   "scripts": {
-    "dev": "pnpm --filter @cherryz/api dev",
-    "dev:manager": "pnpm --filter @cherryz/manager dev",
-    "dev:viewer": "pnpm --filter @cherryz/viewer dev",
-    "dev:all": "pnpm --parallel --filter @cherryz/* dev",
-    "build": "pnpm --filter @cherryz/api build",
-    "build:manager": "pnpm --filter @cherryz/manager build",
-    "build:viewer": "pnpm --filter @cherryz/viewer build",
-    "build:all": "pnpm --filter @cherryz/* build",
+    "dev": "turbo run dev --filter=@cherryz/api",
+    "dev:manager": "turbo run dev --filter=@cherryz/manager",
+    "dev:viewer": "turbo run dev --filter=@cherryz/viewer",
+    "dev:all": "turbo run dev",
+    "build": "turbo run build --filter=@cherryz/api",
+    "build:manager": "turbo run build --filter=@cherryz/manager",
+    "build:viewer": "turbo run build --filter=@cherryz/viewer",
+    "build:all": "turbo run build",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
     "start": "pnpm --filter @cherryz/api start",
     "update-deps": "ncu -u && pnpm install"
   },
@@ -29,6 +31,7 @@
     "pnpm": ">=9.0.0"
   },
   "devDependencies": {
-    "npm-check-updates": "^19.1.1"
+    "npm-check-updates": "^19.1.1",
+    "turbo": "^2.5.8"
   }
 }

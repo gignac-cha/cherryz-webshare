@@ -1,7 +1,7 @@
-import { Router } from 'express';
+import { Router, type Router as RouterType } from 'express';
 import { authenticationController } from '../controllers/authenticationController.js';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * POST /api/authentication/login

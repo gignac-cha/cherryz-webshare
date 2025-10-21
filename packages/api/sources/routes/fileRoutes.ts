@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, type Router as RouterType } from 'express';
 import multer from 'multer';
 import { fileController } from '../controllers/fileController.js';
 import { authenticate, requireAdmin } from '../middlewares/authentication.js';
 import { settings } from '../settings/index.js';
 
-const router = Router();
+const router: RouterType = Router();
 
 // Multer 설정 (임시 저장소)
 const upload = multer({

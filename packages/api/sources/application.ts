@@ -1,11 +1,11 @@
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import authenticationRoutes from './routes/authenticationRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
 
-const app = express();
+const app: Express = express();
 
 // 미들웨어
 app.use(helmet());

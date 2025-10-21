@@ -66,12 +66,11 @@ export async function getFiles(path: string = ''): Promise<FilesResponse> {
 
 export function getDownloadUrl(path: string): string {
   const token = getAuthToken();
-  const url = new URL(`${API_BASE_URL}/files/download`);
-  url.searchParams.set('path', path);
+  const params = new URLSearchParams({ path });
   if (token) {
-    url.searchParams.set('token', token);
+    params.set('token', token);
   }
-  return url.toString();
+  return `${API_BASE_URL}/files/download?${params.toString()}`;
 }
 
 export function downloadFile(path: string): void {

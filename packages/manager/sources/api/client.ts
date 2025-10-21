@@ -35,6 +35,21 @@ const getAuthHeaders = (): HeadersInit => {
   return headers;
 };
 
+/**
+ * Builds a URL with query parameters
+ * Handles both relative and absolute URLs
+ */
+const buildUrl = (path: string, params?: Record<string, string>): string => {
+  const baseUrl = `${API_BASE_URL}${path}`;
+
+  if (!params || Object.keys(params).length === 0) {
+    return baseUrl;
+  }
+
+  const searchParams = new URLSearchParams(params);
+  return `${baseUrl}?${searchParams.toString()}`;
+};
+
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let errorMessage = `HTTP error! status: ${response.status}`;
@@ -86,12 +101,9 @@ export const authApi = {
 // File API
 export const fileApi = {
   async listFiles(path?: string): Promise<FileItem[]> {
-    const url = new URL(`${API_BASE_URL}/files`);
-    if (path) {
-      url.searchParams.set('path', path);
-    }
+    const url = buildUrl('/files', path ? { path } : undefined);
 
-    const response = await fetch(url.toString(), {
+    const response = await fetch(url, {
       headers: getAuthHeaders(),
     });
 
@@ -141,10 +153,9 @@ export const fileApi = {
   },
 
   async deleteFile(path: string): Promise<void> {
-    const url = new URL(`${API_BASE_URL}/files`);
-    url.searchParams.set('path', path);
+    const url = buildUrl('/files', { path });
 
-    const response = await fetch(url.toString(), {
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
@@ -153,15 +164,14 @@ export const fileApi = {
   },
 
   getDownloadUrl(path: string): string {
-    const url = new URL(`${API_BASE_URL}/files/download`);
-    url.searchParams.set('path', path);
-
     const token = getAuthToken();
+    const params: Record<string, string> = { path };
+
     if (token) {
-      url.searchParams.set('token', token);
+      params.token = token;
     }
 
-    return url.toString();
+    return buildUrl('/files/download', params);
   },
 };
 

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { authService } from '../services/authService.js';
+import { authenticationService } from '../services/authenticationService.js';
 import { ApiResponse } from '../types/index.js';
 
-export const authController = {
+export const authenticationController = {
   async login(req: Request, res: Response) {
     try {
       const { username, password } = req.body;
@@ -14,7 +14,7 @@ export const authController = {
         } as ApiResponse);
       }
 
-      const result = await authService.login(username, password);
+      const result = await authenticationService.login(username, password);
 
       res.json({
         success: true,
@@ -39,7 +39,7 @@ export const authController = {
         } as ApiResponse);
       }
 
-      const user = await authService.createUser(username, password, 'user');
+      const user = await authenticationService.createUser(username, password, 'user');
 
       res.status(201).json({
         success: true,

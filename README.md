@@ -91,8 +91,8 @@ pnpm update-deps
 ### 주요 엔드포인트
 
 #### 인증
-- `POST /api/auth/login` - 로그인
-- `POST /api/auth/register` - 사용자 등록
+- `POST /api/authentication/login` - 로그인
+- `POST /api/authentication/register` - 사용자 등록
 
 #### 파일 관리
 - `GET /api/files` - 파일 목록 조회 (인증 필요)

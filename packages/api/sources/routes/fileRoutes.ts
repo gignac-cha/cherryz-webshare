@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { fileController } from '../controllers/fileController.js';
-import { authenticate, requireAdmin } from '../middlewares/auth.js';
+import { authenticate, requireAdmin } from '../middlewares/authentication.js';
 import { settings } from '../settings/index.js';
 
 const router = Router();

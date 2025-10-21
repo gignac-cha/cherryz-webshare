@@ -17,7 +17,7 @@ Authorization: Bearer <your-jwt-token>
 ### 인증 (Authentication)
 
 #### 1. 로그인
-- **URL**: `/auth/login`
+- **URL**: `/authentication/login`
 - **Method**: `POST`
 - **Auth Required**: No
 - **Request Body**:
@@ -43,7 +43,7 @@ Authorization: Bearer <your-jwt-token>
 ```
 
 #### 2. 사용자 등록
-- **URL**: `/auth/register`
+- **URL**: `/authentication/register`
 - **Method**: `POST`
 - **Auth Required**: No
 - **Request Body**:
@@ -241,7 +241,7 @@ Authorization: Bearer <your-jwt-token>
 
 #### 1. 로그인
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3000/api/authentication/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```

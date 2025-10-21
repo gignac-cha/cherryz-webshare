@@ -19,7 +19,7 @@ const initializeAdmin = async () => {
 
 initializeAdmin();
 
-export const authService = {
+export const authenticationService = {
   async login(username: string, password: string) {
     const user = users.find((u) => u.username === username);
 

@@ -23,8 +23,8 @@ app.listen(settings.port, () => {
 ║   Environment: ${settings.nodeEnv}                       ║
 ║                                                       ║
 ║   API Endpoints:                                      ║
-║   - POST   /api/auth/login                            ║
-║   - POST   /api/auth/register                         ║
+║   - POST   /api/authentication/login                  ║
+║   - POST   /api/authentication/register               ║
 ║   - GET    /api/files                                 ║
 ║   - GET    /api/files/download                        ║
 ║   - POST   /api/files/upload      (Admin only)        ║
